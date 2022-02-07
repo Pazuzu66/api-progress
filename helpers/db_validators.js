@@ -1,6 +1,7 @@
 const bcryptjs = require('bcryptjs')
-const { request } = require('express')
+const { request, response } = require('express')
 const {User, Role} = require('../models')
+const {getUser_Token} = require('../controllers/user_token')
 
 
 const existValidator = ( search, exist ) => {
@@ -20,8 +21,9 @@ const isActive = ( search, active ) => {
 }
 const loginValidator = ( valid ) => {
     if( !valid ) {
-        throw new Error(`Usuario o Contraseña Incorrectos`)
+       return false
     }
+    return true
 }
 ///------> ROLES Validators <-----///
 const existRoleByName = async( role = '' ) => {    
@@ -43,24 +45,51 @@ const existUsername = async( username = '' ) => {
     const exist = await User.findOne({username})
     existValidator(username,exist)
 }
-const loginUsername = async(username = '', req = request, next) => {
+const loginUsername = async(req = request, res = response, next) => {
+    const { username, password } = req.body
     const exist = await User.findOne({username})
-    loginValidator(exist)
+    if( !loginValidator(exist)) {
+        return res.status(400).json({
+            msg: 'Usuario o Contraseña Incorrectos'
+        })
+    }
     //Existe el usuario, entonces vemos si coinciden las contraceñas
-    const passSended = req.body.password    //--> password enviada por el usuario
-    const { password } = exist              //--> password almacenada en la BD
-
-    const validPassword = bcryptjs.compareSync(passSended, password)
-    loginValidator(validPassword)
+    
+    const passSended = password                 //--> password enviada por el usuario
+    const passSaved = exist.password            //--> password almacenada en la BD
+    
+    const validPassword = bcryptjs.compareSync(passSended, passSaved)          
+    if(!loginValidator(validPassword)){
+        return res.status(400).json({
+            msg: 'Usuario o Contraseña Incorrectos'
+        })
+    }
+    activeUser(exist._id)    
 
     //---Agregamos el id en la request para hacer el token en el controlador
     req.uid = exist._id
-    //next()
+    next()
 }
-const activeUser = async( username = '' ) => {
-    const {name, state} = User.findOne({username})
+const activeUser = async( _id = '' ) => {
+    const user = await User.findById(_id)
+    const {name, state} = user
     isActive(name,state)
 }
+
+const existJWTDB = async(req = request, res = response, next) => {
+    const tokenSended = req.token
+    const username = req.authUser.username    
+    const tokenSaved = await getUser_Token(username)
+    if(tokenSaved !== tokenSended) {
+        return res.status(400).json({
+            msg: 'Este token no le pertenece al usuario o está desactualizado'
+        })
+    }
+    next()
+}
+
+
+
 
 module.exports = {
     //ROLE
@@ -71,4 +100,6 @@ module.exports = {
     activeUser,
     existUsername,
     loginUsername,
+    //USER_TOKEN
+    existJWTDB
 };

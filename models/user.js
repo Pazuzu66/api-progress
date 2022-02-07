@@ -1,7 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-// Declare the Schema of the Mongo model
-var UserSchema = new Schema({
+const UserSchema = new Schema({
     name:{
         type:String,
         required:[true, 'El Nombre es Obligatorio'],
@@ -43,7 +42,7 @@ var UserSchema = new Schema({
 });
 
 UserSchema.methods.toJSON = function(){
-    const { __v, _id, state, ...user } = this.toObject()
+    const { __v, _id, password, role, state, ...user } = this.toObject()
     user.uid = _id
     return user
 }

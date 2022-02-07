@@ -12,7 +12,9 @@ class Server {
             auth:       '/api/auth',
             progress:   '/api/progress',
             user:       '/api/user',
-            role:       '/api/role'
+            role:       '/api/role',
+            exer_pro:   '/api/exercises/progress',
+            meditions:  '/api/meditions/'
         }
 
         //Func to Connect DB
@@ -36,9 +38,11 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.paths.role,   require('../routes/role.routes'))
-        this.app.use(this.paths.auth,   require('../routes/auth.routes'))
-        this.app.use(this.paths.user,   require('../routes/user.routes'))
+        this.app.use(this.paths.role,       require('../routes/role.routes'))
+        this.app.use(this.paths.auth,       require('../routes/auth.routes'))
+        this.app.use(this.paths.user,       require('../routes/user.routes'))
+        this.app.use(this.paths.exer_pro,   require('../routes/exer_pro.routes'))
+        this.app.use(this.paths.meditions,  require('../routes/meditions.routes'))
     }
 
     listen() {
