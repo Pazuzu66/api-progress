@@ -26,7 +26,7 @@ const Exercises_Prog = new Schema({
         type: Number,
         default: 0,
         required: [true, 'El número de repeticiones es Obligatorio'],
-    },        
+    },    
 })
 Exercises_Prog.methods.toJSON = function() {
     const {_id, __v, ...exercises_prog } = this.toObject();
