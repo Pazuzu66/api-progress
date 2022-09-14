@@ -20,8 +20,6 @@ const login = async( req = request, res = response ) => {
         })
     }
 }
-
-
 module.exports = {
     login
 };

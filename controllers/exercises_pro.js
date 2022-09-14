@@ -23,13 +23,14 @@ const getExercises_Pro = async (req = request, res = response) => {
 const createExer_Pro = async (req = request, res = response) => {
   try {
     const { _id: user } = req.authUser;
-    const { date, exercise, weight, repetitions } = req.body;
+    const { date, exercise, weight, repetitions, note } = req.body;
     const data = {
       user,
       date,
       exercise,
       weight,
       repetitions,
+      note
     };
     console.log(data);
     const newExer_Pro = await Exercises_pros.create(data);

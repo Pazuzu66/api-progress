@@ -6,11 +6,11 @@ const Exercises_Prog = new Schema({
         ref: 'User',
         required: true
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now(),
-        required: [true,'La fecha es Obligatoria'],
-        
+        required: [true, 'La fecha es Obligatoria'],
+
     },
     exercise: {
         type: String,
@@ -26,12 +26,16 @@ const Exercises_Prog = new Schema({
         type: Number,
         default: 0,
         required: [true, 'El número de repeticiones es Obligatorio'],
-    },    
+    },
+    note: {
+        type: String,
+        default: "",        
+    }
 })
-Exercises_Prog.methods.toJSON = function() {
-    const {_id, __v, ...exercises_prog } = this.toObject();
+Exercises_Prog.methods.toJSON = function () {
+    const { _id, __v, ...exercises_prog } = this.toObject();
     exercises_prog.uid = _id
     return exercises_prog
 }
 
-module.exports = model('Exercises_Prog',Exercises_Prog)
+module.exports = model('Exercises_Prog', Exercises_Prog)

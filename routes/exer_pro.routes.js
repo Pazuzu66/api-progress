@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { check,buildCheckFunction } = require("express-validator");
+const { check,buildCheckFunction,header } = require("express-validator");
 
 const { getExercises_Pro, createExer_Pro, deleteExer_Pro, updateExer_Pro } = require('../controllers/exercises_pro');
 const { validateFields, validateJWT, } = require("../middlewares");

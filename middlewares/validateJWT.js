@@ -5,7 +5,7 @@ const {User} = require("../models");
 
 const validateJWT = async( req = request, res = response, next ) => {
     
-    const { jtoken } = req.headers
+    const { jtoken } = req.headers    
     if( !jtoken ) {
         res.status(401).json({
             msg: 'Se requiere de un token para la peticion'

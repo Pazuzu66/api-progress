@@ -4,6 +4,7 @@ const { check } = require('express-validator')
 const { validateFields} = require('../middlewares')
 const { loginUsername  } = require('../helpers')
 const { login } = require('../controllers/auth')
+const { validToken } = require('../controllers/user_token')
 
 const router = Router()
 
@@ -14,5 +15,7 @@ router.post('/login',[
     loginUsername,
     validateFields,
 ],login)
+
+router.post('/validate',validToken)
 
 module.exports = router
